@@ -48,28 +48,7 @@ export default class Tambah extends Component {
             })
             .catch((error) => {
                 console.log("Error :" ,error)
-            })
-;
-
-            // const barang = {
-            //     kd_brg: this.state.kd_brg,
-            //     nm_brg: this.state.nm_brg,
-            //     satuan: this.state.satuan,
-            //     hrg_beli: this.state.hrg_beli,
-            //     hrg_jual: this.state.hrg_jual,
-            //     stok: this.state.stok,
-            //     stok_min: this.state.stok_min
-            // }
-
-            // data
-            //     .push(barang)
-            //     .then((data) => {
-            //         Alert.alert("Success","Success Tambah Data");
-            //         this.props.navigation.replace('Home');
-            //     })
-            //     .catch((error) => {
-            //         console.log("Error :" ,error)
-            //     })
+            });
 
         } else {
             Alert.alert("Error", "Data wajib diisi !")
