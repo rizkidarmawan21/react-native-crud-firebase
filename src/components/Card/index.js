@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-const Card = ({id,barangsItem,navigation}) => {
+const Card = ({id,barangsItem,navigation,removeData}) => {
     return (
         <TouchableOpacity style={styles.container} onPress={()=> navigation.navigate('Detail',{id:id})}>
             <View>
@@ -11,8 +11,8 @@ const Card = ({id,barangsItem,navigation}) => {
                 <Text style={styles.name}>{barangsItem.nm_brg}</Text>
             </View>
             <View style={styles.icon}>
-                <FontAwesomeIcon icon={faEdit} color={'orange'} size={25}/>
-                <FontAwesomeIcon icon={faTimes} color={'red'} size={25} />
+                <FontAwesomeIcon icon={faEdit} color={'orange'}  size={25} onPress={()=> navigation.navigate('Edit',{id:id})}/>
+                <FontAwesomeIcon icon={faTimes} color={'red'} onPress={()=>removeData(id)} size={25} />
             </View>
         </TouchableOpacity>
     )
