@@ -1,4 +1,4 @@
 import TextInput from "./textInput";
-import Card from "./card";
+import Card from "./Card";
 
 export {TextInput,Card};

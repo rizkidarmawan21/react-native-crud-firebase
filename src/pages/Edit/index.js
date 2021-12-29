@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, ScrollView, TouchableOpacity, Text, Alert } from 'react-native'
 import { TextInput } from '../../components'
-import { getDatabase, ref, push, set } from "firebase/database";
+import { getDatabase, ref, set,onValue, update } from "firebase/database";
 import { FIREBASE } from '../../config/Firebase';
 
 
-export default class Tambah extends Component {
+export default class Edit extends Component {
 
     constructor(props) {
         super(props)
@@ -21,6 +21,27 @@ export default class Tambah extends Component {
         }
     }
 
+    componentDidMount(){
+        const db = getDatabase(FIREBASE);
+        const dbRef = ref(db, 'posts/'+this.props.route.params.id);
+        
+        onValue(dbRef, (snapshot) => {
+        let data = snapshot.val() ?  snapshot.val() : {};
+        let barangItem = {...data}
+        this.setState({
+            kd_brg:barangItem.kd_brg,
+            nm_brg:barangItem.nm_brg,
+            satuan:barangItem.satuan,
+            hrg_beli:barangItem.hrg_beli,
+            hrg_jual:barangItem.hrg_jual,
+            stok:barangItem.stok,
+            stok_min:barangItem.stok_min
+        }) 
+        }, {
+          onlyOnce: true
+        });
+    }
+
     OnChangeText = (namaState, value) => {
         this.setState({
             [namaState]: value
@@ -32,10 +53,10 @@ export default class Tambah extends Component {
             console.log("data masuk on submit")
             console.log(this.state)
             const db = getDatabase(FIREBASE)
-            const postListRef = ref(db, 'posts');
-            const newPostRef = push(postListRef);
-            set(newPostRef, {
-                kd_brg: this.state.kd_brg,
+            const postListRef =  ref(db, 'posts/'+this.props.route.params.id);
+            // const newPostRef = update(postListRef);
+            update(postListRef, {
+                    kd_brg: this.state.kd_brg,
                     nm_brg: this.state.nm_brg,
                     satuan: this.state.satuan,
                     hrg_beli: this.state.hrg_beli,
@@ -43,7 +64,7 @@ export default class Tambah extends Component {
                     stok: this.state.stok,
                     stok_min: this.state.stok_min
             }).then((data) => {
-                Alert.alert("Success","Success Tambah Data");
+                Alert.alert("Success","Success Edit Data");
                 this.props.navigation.replace('Home');
             })
             .catch((error) => {

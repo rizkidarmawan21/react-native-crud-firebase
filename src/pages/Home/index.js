@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, View, TouchableOpacity ,Alert} from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, remove} from "firebase/database";
 import { Card } from '../../components'
+import { FIREBASE } from '../../config/Firebase';
 
 
 export default class Home extends Component {
@@ -18,7 +19,11 @@ export default class Home extends Component {
     }
 
     componentDidMount(){
-        const db = getDatabase();
+        this.ambilData()
+    }
+
+    ambilData = () => {
+        const db = getDatabase(FIREBASE);
         const dbRef = ref(db, 'posts');
         
         onValue(dbRef, (snapshot) => {
@@ -38,6 +43,27 @@ export default class Home extends Component {
         });
     }
     
+    removeData = (id) => {
+        Alert.alert(
+            "info",
+            "Anda yakin ingin menghapus data ini ?",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+              },
+              { text: "OK", onPress: () => {
+                  const db = getDatabase(FIREBASE);
+                  const dbRef = ref(db, 'posts/'+id);
+                  remove(dbRef)
+                  this.ambilData();
+                  Alert.alert('Hapus','Success menghapus data')
+              }
+            }
+            ]
+          );
+    }
 
     render() {
         // console.log("data = ", this.state.barangs)
@@ -56,7 +82,7 @@ export default class Home extends Component {
                     <View style={styles.listData} >
                         {barangsKey.length > 0 ? (
                             barangsKey.map((key) =>(
-                                <Card id={key} barangsItem={barangs[key]} {...this.props} />
+                                <Card id={key} barangsItem={barangs[key]} {...this.props} removeData={this.removeData}/>
                             ))
                         ) : (
                             <Text> Daftar Kosong </Text>
